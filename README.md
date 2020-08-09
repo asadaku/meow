@@ -6,4 +6,5 @@ This library has the following aims:
 # How to run
 1. Download the project.
 2. Install requirements: `pip install -r requirements.txt`.
-2. Run `python manage.py runserver`
+3. Run `python manage.py runserver`.
+4. Open a browser, and go to `127.0.0.1:8000/app`.
