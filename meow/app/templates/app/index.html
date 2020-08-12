@@ -8,7 +8,18 @@
 
   <script>
   function updateImage() {
-    document.getElementById("cat-view").src = "https://placekitten.com/g/500/500";
+    var catView = document.getElementById("cat-view")
+    var myRequest = new Request('flowers.jpg');
+    fetch('get_a_cat/', {
+      method: 'GET',
+      credentials: 'same-origin',
+      redirect: 'follow',
+    })
+    .then(response => response.blob())
+    .then(function(myBlob) {
+      console.log(myBlob)
+      catView.src = URL.createObjectURL(myBlob);
+    });
   }
   </script>
 
