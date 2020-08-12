@@ -6,8 +6,13 @@
     <title></title>
   </head>
 
+  <script>
+  function updateImage() {
+    document.getElementById("cat-view").src = "https://placekitten.com/g/500/500";
+  }
+  </script>
+
   <body>
-    <!-- CSS only -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
     <div class="container">
@@ -15,10 +20,10 @@
             <h1 class="display-4">Welcome to the Meow App!</h1>
             <p class="lead">Here is a nice cat photo for you</p>
             <p class="lead">
-            <img src="https://placekitten.com/g/400/400" class="img-thumbnail">
+            <img src="https://placekitten.com/g/400/400" class="img-thumbnail" id="cat-view" width="500px">
             <p class="lead">
             <p class="lead">
-                <a class="btn btn-primary btn-lg" href="#" role="button">Show Another Cat</a>
+                <a class="btn btn-primary btn-lg" href="#" onclick="updateImage()" role="button">Show Another Cat</a>
                 <a class="btn btn-secondary btn-lg" disabled>Submit Image</a>
             </p>
         </div>
