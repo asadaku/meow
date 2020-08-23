@@ -21,6 +21,30 @@
       catView.src = URL.createObjectURL(myBlob);
     });
   }
+
+  function openUploadDialog() {
+     document.getElementById("catFile").click();
+  }
+
+  function showUploadedImage(event) {
+     var catView = document.getElementById("cat-view")
+     catView.src = URL.createObjectURL(event.target.files[0]);
+     document.getElementById("catSaveButton").disabled = false;
+     document.getElementById("catSaveButton").innerHTML = "Save";
+  }
+
+  function nowDoThis() {
+     var formData = document.getElementById("catFile")
+
+     console.log("NICE");
+     console.log(formData.value)
+
+     document.getElementById("catSaveButton").disabled = true;
+     document.getElementById("catSaveButton").innerHTML = "Thank you";
+     formData.value = ""
+  }
+
+
   </script>
 
   <body>
@@ -29,13 +53,19 @@
     <div class="container">
         <div class="jumbotron">
             <h1 class="display-4">Welcome to the Meow App!</h1>
-            <p class="lead">Here is a nice cat photo for you</p>
+            <p class="lead" id="theNotifier">Here is a nice cat photo for you</p>
             <p class="lead">
-            <img src="https://placekitten.com/g/400/400" class="img-thumbnail" id="cat-view" width="500px">
+            <div style="width:500px; height:500px">
+                <img src="https://placekitten.com/g/400/400" class="img-thumbnail" id="cat-view" width="500px">
+            </div>
+            </p>
             <p class="lead">
+                <a class="btn btn-primary btn-sm" href="#" onclick="updateImage()" role="button">Show Another Cat</a>
+            </p>
             <p class="lead">
-                <a class="btn btn-primary btn-lg" href="#" onclick="updateImage()" role="button">Show Another Cat</a>
-                <a class="btn btn-secondary btn-lg" disabled>Submit Image</a>
+                <input id='catFile' type='file' accept="image" hidden onchange="showUploadedImage(event)"/>
+                <button class="btn btn-primary btn-sm" type="button" id="catUploadButton" onclick="openUploadDialog()">Select image to upload</button>
+                <button class="btn btn-primary btn-sm" type="button" id="catSaveButton" onclick="nowDoThis()" disabled="true">Save</button>
             </p>
         </div>
     </div>
