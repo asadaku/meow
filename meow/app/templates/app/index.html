@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% csrf_token %}
 
 <html lang="en" dir="ltr">
   <head>
@@ -7,18 +8,19 @@
   </head>
 
   <script>
+  var fileToUpload = null
+
   function updateImage() {
-    var catView = document.getElementById("cat-view")
-    var myRequest = new Request('flowers.jpg');
+    var catView = document.getElementById("cat-view");
     fetch('get_a_cat/', {
       method: 'GET',
       credentials: 'same-origin',
       redirect: 'follow',
     })
-    .then(response => response.blob())
-    .then(function(myBlob) {
-      console.log(myBlob)
-      catView.src = URL.createObjectURL(myBlob);
+    .then(response => response.json())
+    .then(response => {
+      console.log(response)
+      catView.src = response.image_url;
     });
   }
 
@@ -29,26 +31,64 @@
   function showUploadedImage(event) {
      var catView = document.getElementById("cat-view")
      catView.src = URL.createObjectURL(event.target.files[0]);
+     console.log(event.target.files[0]);
+
+     fileToUpload = event.target.files[0];
      document.getElementById("catSaveButton").disabled = false;
      document.getElementById("catSaveButton").innerHTML = "Save";
   }
 
-  function nowDoThis() {
+  function saveCatImage() {
      var formData = document.getElementById("catFile")
-
-     console.log("NICE");
-     console.log(formData.value)
-
      document.getElementById("catSaveButton").disabled = true;
+
+     console.log(fileToUpload)
+     var formData = new FormData();
+     formData.append("cat_image", fileToUpload);
+     const csrfToken = getCookie('csrftoken');
+     fetch('post_a_cat/', {
+        method: 'POST',
+        credentials: 'same-origin',
+        redirect: 'follow',
+        body: formData,
+        headers: {
+//           'Content-Type': 'multipart/form-data',
+           'x-CSRFToken': csrfToken
+        }
+     })
+     .then(response => response.json())
+     .then(data => {
+        console.log(data)
+     })
+     .catch(error => {
+        console.error(error)
+     });
+
      document.getElementById("catSaveButton").innerHTML = "Thank you";
      formData.value = ""
   }
 
 
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            if (cookie.substring(0, 10) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(10));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+  }
+
   </script>
 
   <body>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <div class="container">
         <div class="jumbotron">
@@ -56,17 +96,19 @@
             <p class="lead" id="theNotifier">Here is a nice cat photo for you</p>
             <p class="lead">
             <div style="width:500px; height:500px">
-                <img src="https://placekitten.com/g/400/400" class="img-thumbnail" id="cat-view" width="500px">
+                <img src="https://placekitten.com/g/400/400" class="img-thumbnail" id="cat-view" style="background-color:transparent; height: 100%; width: 100%; object-fit: contain">
             </div>
+            <div>
             </p>
-            <p class="lead">
+            <p>
                 <a class="btn btn-primary btn-sm" href="#" onclick="updateImage()" role="button">Show Another Cat</a>
             </p>
-            <p class="lead">
+            <p>
                 <input id='catFile' type='file' accept="image" hidden onchange="showUploadedImage(event)"/>
                 <button class="btn btn-primary btn-sm" type="button" id="catUploadButton" onclick="openUploadDialog()">Select image to upload</button>
-                <button class="btn btn-primary btn-sm" type="button" id="catSaveButton" onclick="nowDoThis()" disabled="true">Save</button>
+                <button class="btn btn-primary btn-sm" type="button" id="catSaveButton" onclick="saveCatImage()" disabled="true">Save</button>
             </p>
+            </div>
         </div>
     </div>
   </body>
